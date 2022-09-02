@@ -4,41 +4,70 @@
     <div class="row" style="">
       <div class="content">
         despezas
-        <div>R$-15000</div>
+        <div>- R${{ this.grandTotal.expenses.toFixed(2) }}</div>
       </div>
       <div class="content">
         receitas
-        <div>R$10000</div>
+        <div>R${{ this.grandTotal.recipe.toFixed(2)}}</div>
       </div>
       <div class="content">
         total
-        <div>R$4000</div>
+        <div>R${{ this.grandTotal.total.toFixed(2) }}</div>
       </div>
     </div>
     <div class="transection">
       Transações
-      <button class="button-transection" @click="showForm">Nova transação</button>
+      <button class="button-transection" @click="showForm">
+        Nova transação
+      </button>
     </div>
 
     <div class="form" v-if="hidden === true">
-    <form class="form-group">
-      <div class="form-group">
-        <input type="text" v-model="payments.name" id="name" placeholder="Seu Nome"/>
-        <span>{{payments.name}}</span>
-      </div>
-      <div class="form-group">
-        <input type="date" v-model="data" name="" id="date" placeholder="data">
-      </div>
-      <select v-model="type" id="type">
-        <option value="receita">receita</option>
-        <option value="despeza">despeza</option>
-      </select>
-      <div class="form-group">
-        <input type="text" name="" v-model="value" id="value" placeholder="valor">
-      </div>
-      <button type="submit">Enviar</button>
-    </form>
+      <form @submit="onSubmit" class="form-group">
+        <div class="form-group">
+          <input type="text" v-model="name" id="name" placeholder="Seu Nome" />
+        </div>
+        <div class="form-group">
+          <input
+            type="date"
+            v-model="date"
+            name=""
+            id="date"
+            placeholder="data"
+          />
+        </div>
+        <select v-model="type" id="type">
+          <option value="receita">receita</option>
+          <option value="despeza">despeza</option>
+        </select>
+        <div class="form-group">
+          <input
+            type="text"
+            name=""
+            v-model="value"
+            id="value"
+            placeholder="valor"
+          />
+        </div>
+        <input type="submit" value="enviar" />
+      </form>
     </div>
+    <table>
+        <tr v-for="transaction in transactions" :key="transaction">
+          <td>
+            {{ transaction.type }}
+          </td>
+          <td>
+            {{ transaction.info }}
+          </td>
+          <td>
+            {{ transaction.value }}
+          </td>
+          <td>
+            {{ transaction.date }}
+          </td>
+        </tr>
+    </table>
   </div>
 </template>
 
@@ -47,34 +76,79 @@ export default {
   data() {
     return {
       payments: {
-        name: '',
-        date: '',
-        type: '',
-        value: '',
+        name: "",
+        date: "",
+        type: "",
+        value: "",
+      },
+      transactions: [],
+      grandTotal: {
+        expenses: 0,
+        recipe: 0,
+        total: 0,
       },
       hidden: false,
-      total: [],
-    }
+      teste: [],
+    };
   },
   methods: {
     showForm() {
-      if(this.hidden == false) {
-        this.hidden = true
+      if (this.hidden == false) {
+        this.hidden = true;
       } else {
-        this.hidden = false
+        this.hidden = false;
       }
-      console.log ("func")
-    } 
+    },
+    onSubmit(e) {
+      e.preventDefault();
+      
+      const transaction = {
+        type: this.name,
+        date: this.date,
+        info: this.type,
+        value: this.value,
+      };
+      if (this.type == "receita") {
+        this.grandTotal.recipe =
+          Number(this.grandTotal.recipe) + Number(this.value);
+      } else {
+        this.grandTotal.expenses =
+          Number(this.grandTotal.expenses) + Number(this.value);
+      }
+      this.grandTotal.total =
+        Number(this.grandTotal.recipe) - Number(this.grandTotal.expenses);
+      this.transactions.push(transaction);
+
+    },
+    
+    
   },
+
   name: "App",
   components: {},
 };
 </script>
 
 <style>
+
+table{
+  width: 100%;
+  height: 20px;
+  margin: 5px;
+}
+
+tr{
+  border: 1px solid black;
+  text-align: center; 
+  }
+
+td{
+  
+  width: 20%;
+}
 .container {
   border: 1px solid black;
-  height: 100vh;
+  min-height: 100vh;
 }
 b {
   display: flex;
@@ -110,16 +184,17 @@ b {
   cursor: pointer;
   background: none;
 }
-form{
- display: flex;
- flex-direction: row;
- gap: 6px;
+form {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
 }
-input{
+input {
   margin: 8px 0;
 }
 select {
-  height: 20px;
+  height: 24px;
+  margin-top: 7px;
 }
 
 .form {
@@ -128,6 +203,5 @@ select {
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 </style>
