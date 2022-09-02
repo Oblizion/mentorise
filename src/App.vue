@@ -3,16 +3,16 @@
     <b>Budget App</b>
     <div class="row" style="">
       <div class="content">
-        despezas
-        <div>- R${{ this.grandTotal.expenses.toFixed(2) }}</div>
+        Despezas
+        <div class="money">- R${{ this.grandTotal.expenses.toFixed(2) }}</div>
       </div>
       <div class="content">
-        receitas
-        <div>R${{ this.grandTotal.recipe.toFixed(2)}}</div>
+        Receitas
+        <div class="money">R${{ this.grandTotal.recipe.toFixed(2)}}</div>
       </div>
       <div class="content">
-        total
-        <div>R${{ this.grandTotal.total.toFixed(2) }}</div>
+        Total
+        <div class="money">R${{ this.grandTotal.total.toFixed(2) }}</div>
       </div>
     </div>
     <div class="transection">
@@ -25,7 +25,7 @@
     <div class="form" v-if="hidden === true">
       <form @submit="onSubmit" class="form-group">
         <div class="form-group">
-          <input type="text" v-model="name" id="name" placeholder="Seu Nome" />
+          <input type="text" v-model="name" id="name" placeholder="nome" />
         </div>
         <div class="form-group">
           <input
@@ -49,7 +49,7 @@
             placeholder="valor"
           />
         </div>
-        <input type="submit" value="enviar" />
+        <input type="submit" value="enviar" @click="filter"/>
       </form>
     </div>
     <table>
@@ -61,7 +61,7 @@
             {{ transaction.info }}
           </td>
           <td>
-            {{ transaction.value }}
+            R${{ transaction.value }}
           </td>
           <td>
             {{ transaction.date }}
@@ -88,7 +88,7 @@ export default {
         total: 0,
       },
       hidden: false,
-      teste: [],
+
     };
   },
   methods: {
@@ -121,7 +121,6 @@ export default {
 
     },
     
-    
   },
 
   name: "App",
@@ -145,6 +144,7 @@ tr{
 td{
   
   width: 20%;
+  padding: 8px;
 }
 .container {
   border: 1px solid black;
@@ -167,7 +167,7 @@ b {
   align-items: center;
 }
 .content {
-  margin: 10px;
+  margin: 40px;
 }
 .transection {
   display: flex;
@@ -203,5 +203,8 @@ select {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.money {
+  margin-top: 5px;
 }
 </style>
